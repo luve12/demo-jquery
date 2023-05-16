@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form A</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">  
+
+  <div class="container">
+	<h1>Form A</h1>
+  <form id="myForm">
+    <div class="mb-3">
+      <label for="inputText" class="form-label">Data Teks</label>
+      <input type="text" class="form-control" id="inputText">
+    </div>
+    <div class="mb-3">
+      <label for="inputNumber" class="form-label">Data Numerik</label>
+      <input type="number" class="form-control" id="inputNumber">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <table class="table" style="display: none;">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Data</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#myForm").submit(function(e) {
+        e.preventDefault();
+        var text = $("#inputText").val();
+        var number = $("#inputNumber").val();
+
+        $.ajax({
+          url: "server(B).php",
+          type: "POST",
+          data: { text: text, number: number },
+          dataType: "json",
+          success: function(response) {
+            displayTable(response);
+          }
+        });
+      });
+
+      function displayTable(data) {
+        var tableBody = $("#tableBody");
+        tableBody.empty();
+
+        for (var i = 0; i < data.length; i++) {
+          var row = "<tr><th scope='row'>" + (i+1) + "</th><td>" + data[i] + "</td></tr>";
+          tableBody.append(row);
+        }
+
+        $(".table").show();
+        $(".table").hide().fadeIn(1000);
+      }
+    });
+  </script>
+</body>
+</html>
